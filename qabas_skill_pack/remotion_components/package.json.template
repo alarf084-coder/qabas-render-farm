@@ -1,0 +1,25 @@
+{
+  "name": "qabas-remotion-studio",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "bundle": "NODE_OPTIONS=--dns-result-order=ipv4first remotion bundle src/index.ts --out-dir ./build",
+    "render": "NODE_OPTIONS=--dns-result-order=ipv4first remotion render",
+    "still": "NODE_OPTIONS=--dns-result-order=ipv4first remotion still"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "latest",
+    "@remotion/cli": "latest",
+    "@remotion/renderer": "latest",
+    "@remotion/bundler": "latest",
+    "@remotion/transitions": "latest",
+    "@remotion/shapes": "latest",
+    "@remotion/paths": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "@types/react": "^18.3.12"
+  }
+}
