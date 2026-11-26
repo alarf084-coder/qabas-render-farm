@@ -28,11 +28,16 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install FFmpeg & PO Token Server
+      - name: Setup Deno (for yt-dlp EJS solver)
+        uses: denoland/setup-deno@v2
+
+      - name: Install FFmpeg, yt-dlp EJS & PO Token Server
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
           docker run --name bgutil-provider -d -p 4416:4416 brainicism/bgutil-ytdlp-pot-provider
-          pip install -q -U yt-dlp bgutil-ytdlp-pot-provider
+          pip install -q -U "yt-dlp[default]" bgutil-ytdlp-pot-provider
+          mkdir -p ~/.config/yt-dlp
+          printf "%s\n" "--js-runtimes deno" "--js-runtimes node" "--remote-components ejs:github" > ~/.config/yt-dlp/config
 
       - name: Create Output Directory
         run: mkdir -p out
