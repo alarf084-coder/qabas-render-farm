@@ -28,8 +28,11 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg & PO Token Server
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          docker run --name bgutil-provider -d -p 4416:4416 brainicism/bgutil-ytdlp-pot-provider
+          pip install -q -U yt-dlp bgutil-ytdlp-pot-provider
 
       - name: Create Output Directory
         run: mkdir -p out
@@ -45,11 +48,12 @@ jobs:
           YOUTUBE_COOKIES: ${{ secrets.YOUTUBE_COOKIES }}
         run: |
           if [ -n "$YOUTUBE_COOKIES" ]; then
-            printf "%s\n" "$YOUTUBE_COOKIES" > cookies.txt
+            printf "%s\n" "$YOUTUBE_COOKIES" | tr -d '\r' > cookies.txt
             cp cookies.txt "${{ inputs.job_folder }}/cookies.txt"
             export YT_COOKIES_FILE="$PWD/cookies.txt"
           fi
           if [ -f "${{ inputs.job_folder }}/run.sh" ]; then
+            sed -i 's/android,web/tv/g; s/ios,web/mweb/g; s/tv_embedded,web/web_creator/g; s/visionos,web/web/g' "${{ inputs.job_folder }}/run.sh"
             chmod +x "${{ inputs.job_folder }}/run.sh"
             bash "${{ inputs.job_folder }}/run.sh"
           else
